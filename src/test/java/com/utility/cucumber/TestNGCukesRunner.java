@@ -38,15 +38,18 @@ public class TestNGCukesRunner extends AbstractTestNGCucumberTests {
 	 * Initialized ExetentReport object and set it's property such as
 	 * Project Name, Report Generation Location, etc.
 	 * @author GS-1629
+	 * @throws IOException
 	 */
 	@BeforeSuite
-	public  static void setup() {
+	public  static void setup() throws IOException{
 		ExtentProperties extentProperties = ExtentProperties.INSTANCE;
 		extentProperties.setProjectName("Automation EDB Reporting)");
 		if(StringUtils.isEmpty(BaseTestScript.REPORTLOCATION)) {
-			BaseTestScript.REPORTLOCATION="output";
+			BaseTestScript.REPORTLOCATION=System.getProperty("user.dir")+"/output/LastExecution";
 		}
 		extentProperties.setReportPath(BaseTestScript.REPORTLOCATION+"/report.html");
+		Downloaded_Verifier download = new Downloaded_Verifier();
+		download.deleteAllFilesFromDirectory(BaseTestScript.REPORTLOCATION);
 	}
 
 	@BeforeTest
@@ -69,19 +72,22 @@ public class TestNGCukesRunner extends AbstractTestNGCucumberTests {
 	 * It tear down ExetentReport object and load report generation settings from XML.
 	 * and set systemInfo such as user, OS, RunnerOutput name.
 	 * @author GS-1629
+	 * @throws IOException
 	 */
 	@AfterSuite
-	public static void tearDown()
+	public static void tearDown() throws IOException
 	{
 		Reporter.loadXMLConfig(new File("src/test/resources/extent-config.xml"));
 		Reporter.setSystemInfo("user", System.getProperty("user.name"));
 		Reporter.setSystemInfo("os", System.getProperty("os.name").toUpperCase());
 		Reporter.setTestRunnerOutput("EDB Automation Reports - CME(EDB)");
 
+		String timestamp = BaseTestScript.dateAndSystemTime().replace(":", "_");
 		EmailHelper email = new EmailHelper();
 		Downloaded_Verifier download = new Downloaded_Verifier();
 		try {
 			download.ZipCreation();
+			download.moveFileFromSourceToDestination("CME-EDB-Automation-Report.zip", BaseTestScript.REPORTLOCATION, System.getProperty("user.dir")+"/output/ReportHistory/"+timestamp );
 			if(BaseTestScript.MAILSEND.equalsIgnoreCase("yes")) {
 				email.sendMailViaGmail();
 			}

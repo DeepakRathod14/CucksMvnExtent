@@ -139,36 +139,21 @@ public class Downloaded_Verifier extends BaseTestScript
 	private void zipIt(String zipFile, ArrayList<String> fileList){
 
 		byte[] buffer = new byte[1024];
-
 		try{
-
 			FileOutputStream fos = new FileOutputStream(zipFile);
 			ZipOutputStream zos = new ZipOutputStream(fos);
-
-			System.out.println("Output to Zip : " + zipFile);
-
 			for(String file : fileList){
-
-				System.out.println("File Added : " + file);
 				ZipEntry ze= new ZipEntry(file);
 				zos.putNextEntry(ze);
-
-				FileInputStream in =
-						new FileInputStream(BaseTestScript.REPORTLOCATION + File.separator + file);
-
+				FileInputStream in = new FileInputStream(BaseTestScript.REPORTLOCATION + File.separator + file);
 				int len;
 				while ((len = in.read(buffer)) > 0) {
 					zos.write(buffer, 0, len);
 				}
-
 				in.close();
 			}
-
 			zos.closeEntry();
-			//remember close it
 			zos.close();
-
-			System.out.println("Done");
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}
@@ -183,12 +168,10 @@ public class Downloaded_Verifier extends BaseTestScript
 	 * @return the array list
 	 */
 	private ArrayList<String> generateFileList(File node, ArrayList<String> fileList){
-
 		//add file only
 		if(node.isFile()){
 			fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
 		}
-
 		if(node.isDirectory()){
 			String[] subNote = node.list();
 			for(String filename : subNote){
@@ -319,19 +302,22 @@ public class Downloaded_Verifier extends BaseTestScript
 	 * @author GS-1629
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void deleteAllFilesFromDirectory() throws IOException
+	public void deleteAllFilesFromDirectory(String filePath) throws IOException
 	{
 		logger.info("In Delete All Files From Directory.");
-		String dwnPath = CmeSelenium.FILE_PATH_DOWNLOADED;
-		File directory = new File(dwnPath);
-		File[] files = directory.listFiles();
+		try {
+			File directory = new File(filePath);
+			File[] files = directory.listFiles();
 
-		for (File file : files)
-		{
-			if (!file.delete())
+			for (File file : files)
 			{
-				logger.info("Failed to delete " + file);
+				if (!file.delete())
+				{
+					logger.info("Failed to delete " + file);
+				}
 			}
+		} catch (Exception e) {
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -381,9 +367,41 @@ public class Downloaded_Verifier extends BaseTestScript
 		{
 			logger.info("Exception:-", e);
 		}
-		deleteAllFilesFromDirectory();
+		deleteAllFilesFromDirectory(dwnPath);
 	}
 
+	public void moveFileFromSourceToDestination(String filename, String source, String destination)
+	{
+		File destinationFolder = new File(destination);
+		File sourceFolder = new File(source);
+
+		if (!destinationFolder.exists())
+		{
+			destinationFolder.mkdirs();
+		}
+
+		// Check weather source exists and it is folder.
+		if (sourceFolder.exists() && sourceFolder.isDirectory())
+		{
+			// Get list of the files and iterate over them
+			File[] listOfFiles = sourceFolder.listFiles();
+
+			if (listOfFiles != null)
+			{
+				for (File child : listOfFiles )
+				{
+					// Move files to destination folder
+					if(child.getName().equalsIgnoreCase(filename)) {
+						child.renameTo(new File(destinationFolder + "\\" + child.getName()));
+					}
+				}
+			}
+		}
+		else
+		{
+			logger.info(sourceFolder + "  Folder does not exists");
+		}
+	}
 	/**
 	 * Extract zip folder.
 	 *
@@ -429,11 +447,11 @@ public class Downloaded_Verifier extends BaseTestScript
 	 * @author GS-1629
 	 * @param fileName the file name
 	 */
-	public void deleteSpecificFile(String fileName)
+	public void deleteSpecificFile(String fileName, String filepath)
 	{
 		try
 		{
-			File folder = new File(CmeSelenium.FILE_PATH_DOWNLOADED);
+			File folder = new File(filepath);
 			File[] myfile = folder.listFiles();
 			for (int i = 0; i < myfile.length; i++)
 			{

@@ -19,7 +19,6 @@
 		<poi.version>3.9</poi.version>
 		<pdfBox.version>2.0.8</pdfBox.version>
 		<javax.mail.version>1.5.1</javax.mail.version>
-		<rest.assured>2.9.0</rest.assured>
 	</properties>
 
 	<name>EDB Automation Report (CME)</name>
@@ -152,14 +151,6 @@
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<version>1.6.0</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.jayway.restassured/rest-assured -->
-		<dependency>
-			<groupId>com.jayway.restassured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<version>${rest.assured}</version>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

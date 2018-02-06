@@ -15,12 +15,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +56,9 @@ import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.testng.Reporter;
 
+import com.api.beans.Users;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.utility.constant.CmeApi;
 import com.utility.db.DbManager;
 import com.utility.selenium.ApplicationProperties;
@@ -110,7 +114,7 @@ public class BaseApiClass
 
 		if (role==null)
 		{
-			token = "NA8lbt9KlCPCpIrLy6Hmkj2Krq5X5s3u";
+			token = "";
 			return token;
 		}
 
@@ -174,7 +178,7 @@ public class BaseApiClass
 	 * @return the object
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T getObject(String responseFromServer, String type, Class<T> clasz)
+	public <T> List<T> getObject(String responseFromServer, String type, Class<T> clasz)
 	{
 		try
 		{
@@ -182,24 +186,35 @@ public class BaseApiClass
 			{
 				JAXBContext jc = JAXBContext.newInstance(clasz);
 				Unmarshaller u = jc.createUnmarshaller();
-				return u.unmarshal(new StreamSource(new StringReader(responseFromServer)), clasz).getValue();
-			}
-			else if (type.equals(CmeApi.ACCEPT_TYPE_TEXT_PLAIN))
-			{
-				return (T) responseFromServer;
+				return (List<T>) u.unmarshal(new StreamSource(new StringReader(responseFromServer)), clasz).getValue();
 			}
 			else
 			{
 				Gson gson = new Gson();
 				StringReader reader = new StringReader(responseFromServer);
-				return gson.fromJson(reader, clasz);
+				Type collectionType = com.google.gson.internal.$Gson$Types.newParameterizedTypeWithOwner(null, ArrayList.class, clasz);
+				List<T> list = gson.fromJson(reader, collectionType);
+				return list;
 			}
 		}
 		catch (Exception e)
 		{
+			System.out.println(e);
 			logger.info(e);
 		}
 		return null;
+	}
+
+	public Type getClass(String className)
+	{
+		if(className.equals("Example"))
+		{
+			return new TypeToken<Collection<Users>>(){}.getType();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	// ==============================================================================================================================
@@ -356,7 +371,8 @@ public class BaseApiClass
 		String response = null;
 		SSLUtilities.trustAllHostnames();
 		SSLUtilities.trustAllHttpsCertificates();
-		URL url = new URL(BaseTestScript.APPLICATIONURL + resourceUrl);
+		//		URL url = new URL(BaseTestScript.APPLICATIONURL + resourceUrl);
+		URL url = new URL(resourceUrl);
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod(method);
