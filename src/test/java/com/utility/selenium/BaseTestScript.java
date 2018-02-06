@@ -14,15 +14,11 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -31,7 +27,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Reporter;
@@ -448,39 +443,5 @@ public class BaseTestScript
 	protected void timeout(int second) throws InterruptedException
 	{
 		selenium.manage().timeouts().implicitlyWait(second, TimeUnit.SECONDS);
-	}
-
-	/**
-	 * Capture error screen method will take screenshot of failuer screen.
-	 * @author GS-1629
-	 * @param screen_name the screen name
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	protected void CaptureErrorScreen(String screen_name) throws IOException
-	{
-
-		String date_str = systemTime();
-		if (screen_name.startsWith("http"))
-		{
-			StringTokenizer split = new StringTokenizer(screen_name, "?");
-			screen_name = split.nextToken();
-			screen_name = screen_name.replace("/", "_");
-			screen_name = screen_name.replace(":", "");
-		}
-		else if (screen_name.contains("/") || screen_name.contains(":") || screen_name.contains("?") || screen_name.contains("\\") || screen_name.contains("*") || screen_name.contains("<") || screen_name.contains(">"))
-		{
-			screen_name = screen_name.replace("/", "_");
-			screen_name = screen_name.replace(":", "");
-			screen_name = screen_name.replace("\\", "");
-			screen_name = screen_name.replace("?", "");
-			screen_name = screen_name.replace("*", "");
-			screen_name = screen_name.replace("<", "");
-			screen_name = screen_name.replace(">", "");
-		}
-		logger.info("Screen Name : " + screen_name);
-		WebDriver augmentedDriver = new Augmenter().augment(selenium);
-		String path = "D:\\BugScreenShort\\" + screen_name + "_" + date_str + ".jpeg";
-		File error = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
-		FileUtils.copyFile(error, new File(path));
 	}
 }
