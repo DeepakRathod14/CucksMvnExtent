@@ -1,6 +1,6 @@
 # Cucumber Extent Reporter
 
-This tool helps you to generate the custom cucumber-jvm report using ExtentReports plugin.
+This tool helps you to generate the custom cucumber-jvm report using ExtentReports plugin....
 
 The [ExtentReports](http://extentreports.relevantcodes.com/) plugin is developed by Anshoo Arora. This is one of the best reporting plugin available for testing world. This plugin can be used with any Test Apis.
 
