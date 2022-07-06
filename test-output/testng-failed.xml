@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite parallel="classes" name="Failed suite [GS-Lab Automation]" guice-stage="DEVELOPMENT" verbose="2">
+  <test thread-count="5" parallel="classes" name="TestNGCucumberRunner(failed)" verbose="2">
+    <classes>
+      <class name="com.utility.cucumber.TestNGCukesRunner">
+        <methods>
+          <include name="feature" invocation-numbers="0"/>
+          <include name="setUpClass"/>
+          <include name="setup"/>
+          <include name="beforeTest"/>
+          <include name="tearDownClass"/>
+          <include name="tearDown"/>
+          <include name="afterTest"/>
+        </methods>
+      </class> <!-- com.utility.cucumber.TestNGCukesRunner -->
+    </classes>
+  </test> <!-- TestNGCucumberRunner(failed) -->
+</suite> <!-- Failed suite [GS-Lab Automation] -->

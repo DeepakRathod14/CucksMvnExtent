@@ -38,7 +38,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -53,6 +52,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.io.IOUtils;
 import org.testng.Assert;
 import org.testng.Reporter;
 
@@ -63,6 +63,7 @@ import com.utility.constant.CmeApi;
 import com.utility.db.DbManager;
 import com.utility.selenium.ApplicationProperties;
 import com.utility.selenium.BaseTestScript;
+import com.utility.selenium.CMEAssert;
 
 /**
  * The Class BaseApiClass.

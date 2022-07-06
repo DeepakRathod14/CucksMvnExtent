@@ -13,7 +13,6 @@ import com.cucumber.listener.ExtentProperties;
 import com.cucumber.listener.Reporter;
 
 import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
 
 /**
  * This class will load cucumber setting as per given and execute before and after annotation
