@@ -5,6 +5,8 @@ package com.utility.selenium;
 
 import java.io.IOException;
 
+import org.testng.Assert;
+
 import com.cucumber.listener.Reporter;
 
 public class CMEAssert
@@ -22,7 +24,7 @@ public class CMEAssert
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			org.testng.Assert.assertTrue(expectedResult);
+			Assert.assertTrue(expectedResult);
 		}
 
 	}

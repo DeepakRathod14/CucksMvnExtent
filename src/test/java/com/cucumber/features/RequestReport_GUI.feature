@@ -1,7 +1,7 @@
 @RequestedReport
 Feature: As a User of CME-EDB Reporting I am on Report Request Page. I am trying to validating all possible features and scenario of Report Request.
 
-  @TC_RR_001
+  @TC_RR_001 @Regression
   Scenario: Verify Components Visibility in Requested Report (landing) Page (TC_RR_001).
     Given Requested Reports page as landing page after successfully login.
     Then Verify "Requested Reports" Page is display.
